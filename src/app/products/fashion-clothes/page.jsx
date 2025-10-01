@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Heart, ShoppingCart, Star, Search, ChevronDown, Menu, X, Filter, TrendingUp } from 'lucide-react';
 import  Navbar from '@/components/layout/navbar';
+import Footer from '@/components/footer/footer';
 
 export default function FashionStore() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -196,6 +197,7 @@ export default function FashionStore() {
   });
 
   return (
+    <>
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
@@ -420,5 +422,8 @@ export default function FashionStore() {
         </div>
       </div>
     </div>
+    
+    <Footer />
+   </>
   );
 }

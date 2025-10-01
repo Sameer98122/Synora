@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { Heart, ShoppingCart, Star, Search, ChevronDown, Menu, X, Filter } from 'lucide-react';
 import Navbar from '@/components/layout/navbar';
+import Footer from '@/components/footer/footer';
 
 
 export default function AccessoriesStore() {
@@ -133,6 +134,7 @@ export default function AccessoriesStore() {
   });
 
   return (
+    <>
     <div className="min-h-screen bg-gray-50">
       <Navbar />
 
@@ -338,5 +340,7 @@ export default function AccessoriesStore() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }

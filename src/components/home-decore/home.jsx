@@ -208,8 +208,9 @@ export default function HomeDecorPage() {
   };
 
   return (
+    <>
     <LazyMotion features={domAnimation}>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 mt-10 relative overflow-hidden">
         
         {/* Background Elements */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -432,5 +433,7 @@ export default function HomeDecorPage() {
         </motion.div>
       </div>
     </LazyMotion>
+   
+    </>
   );
 }

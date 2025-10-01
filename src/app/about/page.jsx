@@ -1,5 +1,6 @@
 'use client';
 
+import Footer from '@/components/footer/footer';
 import Navbar from '@/components/layout/navbar';
 import { useState, useEffect } from 'react';
 
@@ -288,6 +289,7 @@ export default function AboutPage() {
         }
       `}</style>
     </div>
+    <Footer />
     </>
   );
 }
