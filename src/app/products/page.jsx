@@ -1,7 +1,11 @@
+import Navbar from "@/components/layout/navbar";
+import Product from "@/components/product/pro";
+
 export default function Home (){
     return(
-        <div>
-            <h1>this is product page</h1>
-        </div>
+       <>
+       <Navbar/>
+       <Product/>
+       </>
     )
 }

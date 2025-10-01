@@ -1,7 +1,11 @@
+import HomeDecorPage from "@/components/home-decore/home";
+import Navbar from "@/components/layout/navbar";
+
 export default function Home (){
     return(
-        <div>
-            <h1>this is homedecor page</h1>
-        </div>
+        <>
+        <Navbar/>
+        <HomeDecorPage/>
+        </>
     )
 }
