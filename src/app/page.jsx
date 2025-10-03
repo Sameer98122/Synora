@@ -1,3 +1,4 @@
+import Footer from "@/components/footer/footer";
 import AboutSection from "@/components/home/about";
 import HeroSection from "@/components/home/hero";
 import ProductsSection from "@/components/home/products";
@@ -11,7 +12,7 @@ export default function Home() {
     <HeroSection/>
     <AboutSection/>
     <ProductsSection/>
-    
+    <Footer/>
     </>
   );
 }
