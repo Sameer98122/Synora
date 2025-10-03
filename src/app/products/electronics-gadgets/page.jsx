@@ -2,7 +2,7 @@
 
 import React, { useState, useMemo } from 'react';
 import { motion, AnimatePresence, LazyMotion, domAnimation } from 'framer-motion';
-import { Heart, Star, ShoppingCart, Search, ChevronDown, Sparkles } from 'lucide-react';
+import { Heart, Star, ShoppingCart, Search, ChevronDown, Sparkles, Filter } from 'lucide-react';
 import Navbar from '../../../components/layout/navbar';
 import Footer from '@/components/footer/footer';
 
@@ -10,6 +10,8 @@ export default function ElectronicsStore() {
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('featured');
   const [wishlist, setWishlist] = useState(new Set());
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedFilter, setSelectedFilter] = useState('all');
 
   const products = [
     { 
@@ -21,6 +23,7 @@ export default function ElectronicsStore() {
       reviews: 324,
       badge: 'Best Seller',
       badgeColor: 'bg-green-500',
+      category: 'audio',
       image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=500&fit=crop' 
     },
     { 
@@ -32,6 +35,7 @@ export default function ElectronicsStore() {
       reviews: 156,
       badge: 'New',
       badgeColor: 'bg-blue-600',
+      category: 'wearables',
       image: 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400&h=500&fit=crop' 
     },
     { 
@@ -43,6 +47,7 @@ export default function ElectronicsStore() {
       reviews: 89,
       badge: 'Sale',
       badgeColor: 'bg-red-500',
+      category: 'accessories',
       image: 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400&h=500&fit=crop' 
     },
     { 
@@ -54,6 +59,7 @@ export default function ElectronicsStore() {
       reviews: 203,
       badge: 'Trending',
       badgeColor: 'bg-purple-600',
+      category: 'audio',
       image: 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=500&fit=crop' 
     },
     { 
@@ -65,6 +71,7 @@ export default function ElectronicsStore() {
       reviews: 412,
       badge: 'Best Seller',
       badgeColor: 'bg-green-500',
+      category: 'accessories',
       image: 'https://images.unsplash.com/photo-1595225476474-87563907a212?w=400&h=500&fit=crop' 
     },
     { 
@@ -76,6 +83,7 @@ export default function ElectronicsStore() {
       reviews: 278,
       badge: 'New',
       badgeColor: 'bg-blue-600',
+      category: 'audio',
       image: 'https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=400&h=500&fit=crop' 
     },
     { 
@@ -87,6 +95,7 @@ export default function ElectronicsStore() {
       reviews: 156,
       badge: 'Sale',
       badgeColor: 'bg-red-500',
+      category: 'cameras',
       image: 'https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?w=400&h=500&fit=crop' 
     },
     { 
@@ -98,31 +107,37 @@ export default function ElectronicsStore() {
       reviews: 342,
       badge: 'Trending',
       badgeColor: 'bg-purple-600',
+      category: 'accessories',
       image: 'https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&h=500&fit=crop' 
     }
   ];
 
-  const sortOptions = [
-    { value: 'featured', label: 'Featured' },
-    { value: 'price-low', label: 'Price: Low to High' },
-    { value: 'price-high', label: 'Price: High to Low' },
-    { value: 'rating', label: 'Top Rated' }
+  const filterOptions = [
+    { value: 'all', label: 'All Items' },
+    { value: 'audio', label: 'Audio' },
+    { value: 'wearables', label: 'Wearables' },
+    { value: 'accessories', label: 'Accessories' },
+    { value: 'cameras', label: 'Cameras' }
   ];
 
   // Filter and Sort
   const filteredProducts = useMemo(() => {
     const term = searchTerm.trim().toLowerCase();
-    let filtered = products.filter(product =>
-      product.name.toLowerCase().includes(term)
-    );
+    let filtered = products.filter(product => {
+      const matchesSearch = product.name.toLowerCase().includes(term);
+      const matchesFilter = selectedFilter === 'all' || product.category === selectedFilter;
+      return matchesSearch && matchesFilter;
+    });
+    
     switch (sortBy) {
       case 'price-low':  filtered.sort((a, b) => a.price - b.price); break;
       case 'price-high': filtered.sort((a, b) => b.price - a.price); break;
       case 'rating':     filtered.sort((a, b) => b.rating - a.rating); break;
+      case 'newest':     filtered.sort((a, b) => b.id - a.id); break;
       default: break;
     }
     return filtered;
-  }, [searchTerm, sortBy, products]);
+  }, [searchTerm, sortBy, selectedFilter]);
 
   // Wishlist handler
   const toggleWishlist = (id) => {
@@ -156,76 +171,115 @@ export default function ElectronicsStore() {
           </div>
 
           {/* Header Section */}
-          <motion.div 
-            className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.55 }}
-          >
-            <div className="text-center">
-              <motion.div 
-                className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-5"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ delay: 0.15, type: 'spring' }}
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                Elevate Your Tech!
-              </motion.div>
+          <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative">
+            <motion.div 
+              className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-6"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55 }}
+            >
+              <div className="text-center">
+                <motion.div 
+                  className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-5"
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ delay: 0.15, type: 'spring' }}
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Elevate Your Tech!
+                </motion.div>
 
-              <motion.h1 
-                className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-3"
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25, duration: 0.5 }}
-              >
-                Electronics
-                <span className="block text-blue-600 mt-2">SYNORA</span>
-              </motion.h1>
+                <motion.h1 
+                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-3"
+                  initial={{ opacity: 0, y: 12 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.25, duration: 0.5 }}
+                >
+                  Electronics
+                  <span className="block text-blue-400 mt-2">SYNORA</span>
+                </motion.h1>
 
-              <motion.p 
-                className="text-sm sm:text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.35, duration: 0.45 }}
-              >
-                Discover the latest gadgets, tech essentials & great deals for every lifestyle.
-              </motion.p>
-            </div>
-          </motion.div>
+                <motion.p 
+                  className="text-sm sm:text-base md:text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.35, duration: 0.45 }}
+                >
+                  Discover the latest gadgets, tech essentials & great deals for every lifestyle.
+                </motion.p>
+              </div>
+            </motion.div>
+          </div>
 
-          {/* Navbar (Search + Sort) */}
-          <nav className="bg-white/80 backdrop-blur-md border-y border-slate-200 sticky top-16 z-40 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          {/* Search and Filter Section */}
+          <div className="bg-white shadow-sm sticky top-16 z-50 border-b border-gray-200">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 {/* Search Bar */}
-                <div className="relative flex-1 w-full sm:max-w-xl">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                   <input
                     type="text"
                     placeholder="Search electronics & gadgets..."
                     value={searchTerm}
                     onChange={e => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                    className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition"
                   />
                 </div>
 
-                {/* Sort Dropdown */}
-                <div className="relative w-full sm:w-auto">
-                  <select
-                    value={sortBy}
-                    onChange={e => setSortBy(e.target.value)}
-                    className="w-full sm:w-auto appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2.5 pr-10 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                {/* Filter & Sort */}
+                <div className="flex gap-2 sm:gap-3">
+                  <button
+                    onClick={() => setShowFilters(!showFilters)}
+                    className={`flex items-center gap-2 px-4 py-2.5 border rounded-lg font-medium transition-all text-sm ${
+                      showFilters 
+                        ? 'bg-blue-50 border-blue-500 text-blue-600' 
+                        : 'border-gray-300 hover:bg-gray-50'
+                    }`}
                   >
-                    {sortOptions.map(opt => (
-                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                    <Filter size={18} />
+                    <span className="hidden sm:inline">Filter</span>
+                  </button>
+
+                  <div className="relative flex-1 sm:w-48">
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer w-full text-sm"
+                    >
+                      <option value="featured">Featured</option>
+                      <option value="price-low">Price: Low to High</option>
+                      <option value="price-high">Price: High to Low</option>
+                      <option value="rating">Top Rated</option>
+                      <option value="newest">Newest</option>
+                    </select>
+                    <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={18} />
+                  </div>
                 </div>
               </div>
+
+              {/* Category Pills */}
+              {showFilters && (
+                <div className="mt-4 pb-2">
+                  <div className="flex flex-wrap gap-2">
+                    {filterOptions.map(option => (
+                      <button
+                        key={option.value}
+                        onClick={() => setSelectedFilter(option.value)}
+                        className={`px-4 py-2 rounded-full border font-medium transition-all text-sm ${
+                          selectedFilter === option.value
+                            ? 'bg-blue-600 text-white border-blue-600'
+                            : 'border-gray-300 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600'
+                        }`}
+                      >
+                        {option.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </nav>
+          </div>
 
           {/* Products Grid */}
           <motion.div 
@@ -234,6 +288,14 @@ export default function ElectronicsStore() {
             initial="hidden"
             animate="visible"
           >
+            {/* Products Header */}
+            <div className="mb-6 sm:mb-8">
+              <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">All Products</h3>
+              <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+                Showing {filteredProducts.length} {filteredProducts.length === 1 ? 'item' : 'items'}
+              </p>
+            </div>
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 md:gap-8">
               <AnimatePresence mode="popLayout">
                 {filteredProducts.map(product => (
@@ -304,9 +366,9 @@ export default function ElectronicsStore() {
 
                       {/* Price */}
                       <div className="flex items-baseline mb-4">
-                        <span className="text-lg sm:text-xl font-bold text-slate-900">{`₹${(product.price / 100).toFixed(2)}`}</span>
+                        <span className="text-lg sm:text-xl font-bold text-slate-900">₹{product.price.toLocaleString()}</span>
                         {product.originalPrice && (
-                          <span className="text-sm sm:text-base text-slate-500 line-through ml-2">{`₹${(product.originalPrice / 100).toFixed(2)}`}</span>
+                          <span className="text-sm sm:text-base text-slate-500 line-through ml-2">₹{product.originalPrice.toLocaleString()}</span>
                         )}
                       </div>
 
@@ -324,63 +386,6 @@ export default function ElectronicsStore() {
               </AnimatePresence>
             </div>
           </motion.div>
-
-          {/* Footer Section */}
-          {/* <div className="bg-white border-t border-slate-200 py-8">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                {/* About Us */}
-                {/* <div>
-                  <h4 className="text-lg font-semibold text-slate-900 mb-3">About SYNORA</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed">
-                    SYNORA is your go-to destination for the latest and greatest in electronics. We bring you cutting-edge technology and innovative gadgets that enhance your digital lifestyle.
-                  </p>
-                </div> */}
-
-                {/* Customer Service */}
-                {/* <div>
-                  <h4 className="text-lg font-semibold text-slate-900 mb-3">Customer Service</h4>
-                  <ul className="space-y-2 text-sm text-slate-600">
-                    <li><a href="#" className="hover:text-blue-600 transition-colors">Contact Us</a></li>
-                    <li><a href="#" className="hover:text-blue-600 transition-colors">Return Policy</a></li>
-                    <li><a href="#" className="hover:text-blue-600 transition-colors">Shipping Information</a></li>
-                    <li><a href="#" className="hover:text-blue-600 transition-colors">FAQ</a></li>
-                  </ul>
-                </div> */}
-
-                {/* Connect with Us */}
-                {/* <div className="sm:col-span-2">
-                  <h4 className="text-lg font-semibold text-slate-900 mb-3">Connect with Us</h4>
-                  <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                    Follow us on our social media channels to stay updated on the latest products, exclusive offers, and tech tips!
-                  </p>
-                  <div className="flex gap-4">
-                    <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h4v4H8zm0 0H6a6 6 0 006 6h2a6 6 0 006-6h-2m-4-4V6a6 6 0 00-6-6H6a6 6 0 00-6 6v4m0 0h4m8 0h4" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 8c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3zm-8 0c-1.657 0-3 1.343-3 3s1.343 3 3 3 3-1.343 3-3-1.343-3-3-3z" />
-                      </svg>
-                    </a>
-                    <a href="#" className="text-slate-600 hover:text-blue-600 transition-colors">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12.79V12a9 9 0 10-18 0v.79A7.962 7.962 0 003 21h18a7.962 7.962 0 003-8.21z" />
-                      </svg>
-                    </a>
-                  </div>
-                </div>
-              </div>
-
-              <div className="border-t border-slate-200 mt-8 pt-6 text-center">
-                <p className="text-sm text-slate-500">
-                  &copy; 2023 SYNORA. All rights reserved.
-                </p>
-              </div>
-            </div> */}
-          {/* </div> */} 
         </div>
       </LazyMotion>
       <Footer/>

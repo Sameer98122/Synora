@@ -9,13 +9,16 @@ import {
   Eye,
   Search,
   ChevronDown,
-  Sparkles
+  Sparkles,
+  Filter
 } from 'lucide-react';
 
 export default function HomeDecorPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [wishlist, setWishlist] = useState(new Set());
+  const [showFilters, setShowFilters] = useState(false);
+  const [sortBy, setSortBy] = useState('featured');
 
   const products = [
     {
@@ -171,13 +174,32 @@ export default function HomeDecorPage() {
     { value: 'vases', label: 'Vases' },
     { value: 'mirrors', label: 'Mirrors' },
     { value: 'rugs', label: 'Rugs' },
-    { value: 'cushions', label: 'Cushions' }
+    { value: 'cushions', label: 'Cushions' },
+    { value: 'shelves', label: 'Shelves' },
+    { value: 'candles', label: 'Candles' },
+    { value: 'planters', label: 'Planters' }
   ];
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesFilter = selectedFilter === 'all' || product.category === selectedFilter;
     return matchesSearch && matchesFilter;
+  });
+
+  // Sort products based on sortBy value
+  const sortedProducts = [...filteredProducts].sort((a, b) => {
+    switch (sortBy) {
+      case 'price-low':
+        return a.price - b.price;
+      case 'price-high':
+        return b.price - a.price;
+      case 'rating':
+        return b.rating - a.rating;
+      case 'newest':
+        return b.id - a.id;
+      default: // featured
+        return 0;
+    }
   });
 
   const toggleWishlist = (productId) => {
@@ -219,79 +241,115 @@ export default function HomeDecorPage() {
         </div>
 
         {/* Header Section */}
-        <motion.div 
-          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-        >
-          <div className="text-center">
-            <motion.div 
-              className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-6"
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ delay: 0.2, type: "spring" }}
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Transform Your Space
-            </motion.div>
-            
-            <motion.h1 
-              className="text-5xl md:text-6xl lg:text-7xl font-bold text-slate-900 mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
-            >
-              Home Décor
-              <span className="block text-blue-600 mt-2">Collection</span>
-            </motion.h1>
-            
-            <motion.p 
-              className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-            >
-              Discover unique pieces that bring personality and warmth to every corner of your home
-            </motion.p>
-          </div>
-        </motion.div>
-
-        {/* Navbar BELOW header */}
-        <nav className="bg-white/80 backdrop-blur-md border-y border-slate-200 sticky top-0 z-50 shadow-sm">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div className="flex items-center justify-between gap-4">
+        <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative">
+          <motion.div 
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="text-center">
+              <motion.div 
+                className="inline-flex items-center px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold mb-6"
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                Transform Your Space
+              </motion.div>
               
+              <motion.h1 
+                className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.6 }}
+              >
+                Home Décor
+                <span className="block text-blue-400 mt-2">Collection</span>
+              </motion.h1>
+              
+              <motion.p 
+                className="text-xl text-blue-100 max-w-2xl mx-auto leading-relaxed"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+              >
+                Discover unique pieces that bring personality and warmth to every corner of your home
+              </motion.p>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Search and Filter Section */}
+        <div className="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3">
               {/* Search Bar */}
-              <div className="relative flex-1 max-w-xl">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
                 <input
                   type="text"
                   placeholder="Search home decor..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all duration-200"
+                  className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm transition"
                 />
               </div>
 
-              {/* Filter Dropdown */}
-              <div className="relative">
-                <select
-                  value={selectedFilter}
-                  onChange={(e) => setSelectedFilter(e.target.value)}
-                  className="appearance-none bg-white border border-slate-200 rounded-xl px-4 py-2.5 pr-10 text-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none min-w-[150px]"
+              {/* Filter & Sort */}
+              <div className="flex gap-2 sm:gap-3">
+                <button
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={`flex items-center gap-2 px-4 py-2.5 border rounded-lg font-medium transition-all text-sm ${
+                    showFilters 
+                      ? 'bg-blue-50 border-blue-500 text-blue-600' 
+                      : 'border-gray-300 hover:bg-gray-50'
+                  }`}
                 >
-                  {filterOptions.map(option => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400 pointer-events-none" />
+                  <Filter size={18} />
+                  <span className="hidden sm:inline">Filter</span>
+                </button>
+
+                <div className="relative flex-1 sm:w-48">
+                  <select
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="appearance-none bg-white border border-gray-300 rounded-lg px-4 py-2.5 pr-10 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer w-full text-sm"
+                  >
+                    <option value="featured">Featured</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="rating">Top Rated</option>
+                    <option value="newest">Newest</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" size={18} />
+                </div>
               </div>
             </div>
+
+            {/* Category Pills */}
+            {showFilters && (
+              <div className="mt-4 pb-2">
+                <div className="flex flex-wrap gap-2">
+                  {filterOptions.map(option => (
+                    <button
+                      key={option.value}
+                      onClick={() => setSelectedFilter(option.value)}
+                      className={`px-4 py-2 rounded-full border font-medium transition-all text-sm ${
+                        selectedFilter === option.value
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'border-gray-300 hover:border-blue-600 hover:bg-blue-50 hover:text-blue-600'
+                      }`}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-        </nav>
+        </div>
 
         {/* Products Grid */}
         <motion.div 
@@ -300,9 +358,17 @@ export default function HomeDecorPage() {
           initial="hidden"
           animate="visible"
         >
+          {/* Products Header */}
+          <div className="mb-6 sm:mb-8">
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">All Products</h3>
+            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">
+              Showing {sortedProducts.length} {sortedProducts.length === 1 ? 'item' : 'items'}
+            </p>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             <AnimatePresence mode="wait">
-              {filteredProducts.map((product) => (
+              {sortedProducts.map((product) => (
                 <motion.div
                   key={product.id}
                   layout
@@ -329,7 +395,7 @@ export default function HomeDecorPage() {
                     {/* Wishlist Button */}
                     <motion.button
                       onClick={() => toggleWishlist(product.id)}
-                      className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-all duration-200"
+                      className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white transition-all duration-200 z-10"
                       whileTap={{ scale: 0.9 }}
                     >
                       <Heart 
@@ -410,7 +476,7 @@ export default function HomeDecorPage() {
           </div>
 
           {/* Empty State */}
-          {filteredProducts.length === 0 && (
+          {sortedProducts.length === 0 && (
             <motion.div 
               className="text-center py-16"
               initial={{ opacity: 0 }}
@@ -433,7 +499,6 @@ export default function HomeDecorPage() {
         </motion.div>
       </div>
     </LazyMotion>
-   
     </>
   );
 }
