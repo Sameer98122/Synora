@@ -163,7 +163,7 @@ export default function ElectronicsStore() {
     <>
       <Navbar />
       <LazyMotion features={domAnimation}>
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 mt-10 relative overflow-hidden">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 mt-15 relative overflow-hidden">
           {/* Background Blurs */}
           <div className="pointer-events-none opacity-6 absolute inset-0 -z-10">
             <div className="absolute top-24 left-6 w-48 h-48 md:w-64 md:h-64 bg-blue-600 rounded-full blur-3xl opacity-20"></div>
