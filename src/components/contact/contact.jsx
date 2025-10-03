@@ -26,7 +26,7 @@ export default function Contact() {
   return (
     <>
       {/* Header Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative mt-">
+      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative mt-15">
         <Navbar />
         
         <motion.div 
