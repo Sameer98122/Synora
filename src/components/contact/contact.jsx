@@ -26,9 +26,8 @@ export default function Contact() {
   return (
     <>
       {/* Header Section */}
-      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative mt-15">
+      <div className="bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 relative mt-">
         <Navbar />
-<<<<<<< HEAD
         
         <motion.div 
           className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8"
@@ -72,10 +71,6 @@ export default function Contact() {
       {/* Cards Section */}
       <section className="relative bg-white overflow-hidden min-h-screen">
         <div className="relative container mx-auto px-6 lg:px-8 py-20 lg:py-28 z-10">
-=======
-        {/* Main content container */}
-        <div className="relative container mx-auto px-6 lg:px-8 py-20 lg:py-28 z-10 ">
->>>>>>> ece991d4e8c23db29b6ce87870778866724f2116
           <div className="max-w-7xl mx-auto">
             {/* Contact cards grid */}
             <motion.div
