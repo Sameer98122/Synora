@@ -46,7 +46,7 @@ export default function Contact() {
         </div>
         <Navbar />
         {/* Main content container */}
-        <div className="relative container mx-auto px-6 lg:px-8 py-20 lg:py-28 z-10">
+        <div className="relative container mx-auto px-6 lg:px-8 py-20 lg:py-28 z-10 ">
           <div className="max-w-7xl mx-auto">
             {/* Hero content */}
             <motion.div
