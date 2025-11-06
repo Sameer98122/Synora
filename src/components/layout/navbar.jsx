@@ -88,7 +88,7 @@ const Navbar = () => {
                 <ShoppingBagIcon className="w-8 h-8" />
               </motion.div>
               <span className="bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
-                EasyShop
+                Synora
               </span>
             </Link>
           </motion.div>
@@ -175,12 +175,12 @@ const Navbar = () => {
 
           {/* Desktop Auth Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
-            <Link href="/login" className={`flex items-center px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 border-2 ${
+            <Link href="/auth/login" className={`flex items-center px-6 py-3 rounded-xl text-lg font-semibold transition-all duration-300 border-2 ${
               scrolled ? 'text-slate-700 border-slate-300 hover:border-blue-600 hover:text-blue-600 hover:bg-blue-50' : 'text-white border-white/30 hover:border-white hover:bg-white/10'
             }`}>
               <UserCircleIcon className="w-5 h-5 mr-2" /> Login
             </Link>
-            <Link href="/signup" className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-lg font-semibold rounded-xl transition-all duration-300 shadow-lg">
+            <Link href="/auth/signin" className="flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white text-lg font-semibold rounded-xl transition-all duration-300 shadow-lg">
               <SparklesIcon className="w-5 h-5 mr-2" /> Sign Up
             </Link>
           </div>
